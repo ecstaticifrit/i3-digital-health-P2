@@ -101,6 +101,17 @@ The current script validates OpenFDA paging limits before sending a request:
 
 OpenFDA also applies request rate limits. Without an API key, usage is limited to `240` requests per minute and `1,000` requests per day per IP address. With an API key, usage is limited to `240` requests per minute and `120,000` requests per day per key.
 
+### OpenFDA Edge Cases
+
+When using this dataset, keep in mind:
+
+- Some reports may be missing patient, drug, reaction, date, brand, generic, or manufacturer fields.
+- One report can contain multiple drugs and multiple reactions.
+- OpenFDA records may include incomplete data, duplicate-like reports, or follow-up submissions.
+- Matching reports are not proof of causation; they are reported safety events that still need clinical interpretation.
+- Stable large-scale paging may require extra care because `skip` is capped at `25000` and result ordering should be controlled with `sort` when consistency matters.
+- Temporary `5xx` errors and rate-limit responses can occur, so retries and backoff are recommended.
+
 ## How It Works
 
 The pipeline follows these steps for each FDA report:
