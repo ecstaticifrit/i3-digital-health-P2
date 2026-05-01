@@ -14,6 +14,8 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 API_URL = "https://api.fda.gov/drug/event.json"
+MAX_LIMIT = 1000
+MAX_SKIP = 25000
 
 # ----------------------------
 # Helpers
@@ -39,12 +41,22 @@ def get_openfda_field(openfda, key):
     return val[0] if isinstance(val, list) and val else None
 
 
+def validate_paging(limit, skip):
+    if limit < 1 or limit > MAX_LIMIT:
+        raise ValueError(f"limit must be between 1 and {MAX_LIMIT}")
+
+    if skip < 0 or skip > MAX_SKIP:
+        raise ValueError(f"skip must be between 0 and {MAX_SKIP}")
+
+
 # ----------------------------
 # Fetch Data
 # ----------------------------
 
 
 def fetch_data(limit, skip=0, retries=5):
+    validate_paging(limit, skip)
+
     params = {
         "search": "receivedate:[20040101 TO 20081231]",
         "limit": limit,
