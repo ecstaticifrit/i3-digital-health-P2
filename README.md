@@ -92,6 +92,15 @@ The fetch query currently uses this fixed date range:
 
 You can adjust that range in `fetch_data()` if you want different reporting periods.
 
+### OpenFDA Request Limits
+
+The current script validates OpenFDA paging limits before sending a request:
+
+- `limit` must be between `1` and `1000`
+- `skip` must be between `0` and `25000`
+
+OpenFDA also applies request rate limits. Without an API key, usage is limited to `240` requests per minute and `1,000` requests per day per IP address. With an API key, usage is limited to `240` requests per minute and `120,000` requests per day per key.
+
 ## How It Works
 
 The pipeline follows these steps for each FDA report:
